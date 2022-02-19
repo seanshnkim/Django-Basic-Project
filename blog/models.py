@@ -11,5 +11,6 @@ class Post(models.Model):
     def __str__(self):
         return f'[{self.pk}]{self.title}'
 
+    # 포스트 상세 페이지를 만들 때 URL이 도메인 뒤에 /blog/pk of record/를 쓰도록 했기 때문
     def get_absolute_url(self):
         return f'/blog/{self.pk}/'
