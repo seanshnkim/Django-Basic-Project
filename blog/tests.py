@@ -39,7 +39,7 @@ class TestView(TestCase):
         self.assertEqual(Post.objects.count(), 2)
 
         # 3.2 포스트 목록 페이지를 새로고침할 때
-        response = self.client.get('/blog')
+        response = self.client.get('/blog/')
         soup = BeautifulSoup(response.content, 'html.parser')
         self.assertEqual(response.status_code, 200)
 
