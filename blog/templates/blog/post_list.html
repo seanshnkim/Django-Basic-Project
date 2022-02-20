@@ -8,6 +8,7 @@
     </head>
 
     <body>
+        <!-- Navigation bar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
               <a class="navbar-brand" href="./index.html">Do It Django</a>
@@ -92,11 +93,11 @@
         <div class="container my-3">
             <div class="row">
                 <!-- Blog entries-->
-                <div class="col-md-8 col-lg-8">
+                <div class="col-md-8 col-lg-8" id="main-area">
                     <!-- Featured blog post-->
                     <h1>Blog</h1>
                     <p>작성 중</p>
-
+                {% if post_list.exists %}
                     {% for p in post_list %}
                     <!-- Blog post-->
                     <div class="card mb-4">
@@ -116,7 +117,9 @@
                             </div>
                     </div>
                     {% endfor %}
-
+                {% else %}
+                    <h3>아직 게시물이 없습니다.</h3>
+                {% endif %}
                     <!-- Pagination-->
                     <nav aria-label="Pagination">
                         <hr class="my-0" />
