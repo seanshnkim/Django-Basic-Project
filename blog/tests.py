@@ -1,11 +1,14 @@
 from django.test import TestCase, Client
 from bs4 import BeautifulSoup
+from django.contrib.auth.models import User
 from .models import Post
 
 # Create your tests here.
 class TestView(TestCase):
     def setUp(self):
         self.client = Client()
+        self.user_Ironman = User.objects.create_user(username='Ironman', password='sehyun96')
+        self.user_sehyunkim = User.objects.create_user(username='sehyunkim', password='sehyun96')
 
     def navbar_test(self, soup):
         # 1.4 내비게이션 바가 있다.
@@ -55,10 +58,12 @@ class TestView(TestCase):
         post_001 = Post.objects.create(
             title='첫번째 포스트입니다.',
             content='Hello World. We are the world.',
+            author=self.user_sehyunkim,
         )
         post_002 = Post.objects.create(
             title='두번째 포스트입니다.',
             content='1등이 전부는 아니잖아요?',
+            author=self.user_Ironman,
         )
         self.assertEqual(Post.objects.count(), 2)
 
@@ -74,6 +79,10 @@ class TestView(TestCase):
 
         # 3.4 '아직 게시물이 없습니다'라는 문구는 더 이상 보이지 않는다.
         self.assertNotIn('아직 게시물이 없습니다', main_area.text)
+
+        self.assertIn(self.user_sehyunkim.username.upper(), main_area.text)
+        self.assertIn(self.user_Ironman.username.upper(), main_area.text)
+
 
     def test_post_detail(self):
         # 1.1 포스트가 하나 있다.
