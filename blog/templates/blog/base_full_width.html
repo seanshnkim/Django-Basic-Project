@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+<html lang="ko"></html>
 <html>
     <head>
         <title>{% block head_title %}Blog{% endblock %}</title>
@@ -14,7 +15,7 @@
         <div class="container my-3">
             <div class="row">
                 <!-- Blog entries-->
-                <div class="col-md-8 col-lg-8" id="main-area">
+                <div class="col-12" id="main-area">
                     {% block main_area %}
                     {% endblock %}
                 </div>

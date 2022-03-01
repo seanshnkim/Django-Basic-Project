@@ -141,8 +141,6 @@ class TestView(TestCase):
         main_area = soup.find('div', id='main-area')
         self.assertIn('아직 게시물이 없습니다', main_area.text)
 
-
-
     def test_post_detail(self):
         # 1.1 포스트가 하나 있다.
         post_001 = Post.objects.create(
@@ -150,7 +148,7 @@ class TestView(TestCase):
             content='Hello World. We are the world.',
         )
         # 1.2 그 포스트의 url은 '/blog/1/'이다.
-        self.assertEqual(post_001.get_absolute_url(), '/blog/1/')
+        self.assertEqual(post_001.get_absolute_url(), '/blog/4/')
 
         # 2.  첫번째 포스트의 상세 페이지 테스트
         # 2.1 첫번째 포스트의 url로 접근하면 정상적으로 작동한다(status code: 200)
@@ -175,3 +173,30 @@ class TestView(TestCase):
         # 2.6 첫번째 포스트의 내용(content)이 포스트 영역에 있다.
         self.assertIn(post_001.content, post_area.text)
 
+    def test_create_post(self):
+        # 로그인하지 않으면 status code가 200이면 안된다!
+        response = self.client.get('/blog/create_post/')
+        self.assertNotEqual(response.status_code, 200)
+
+        # 로그인을 한다.
+        self.client.login(username='Ironman', password='baekyerin')
+
+        response = self.client.get('/blog/create_post/')
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        self.assertEqual('Create Post - Blog', soup.title.text)
+        main_area = soup.find('div', id='main-area')
+        self.assertIn('Create New Post', main_area.text)
+
+        self.client.post(
+            '/blog/create_post/',
+            {
+                'title': 'Post Form 만들기',
+                'content': "Post Form 페이지를 만듭시다.",
+            }
+        )
+        self.assertEqual(Post.objects.count(), 4)
+        last_post = Post.objects.last()
+        self.assertEqual(last_post.title, "Post Form 만들기")
+        self.assertEqual(last_post.author.username, 'Ironman')
